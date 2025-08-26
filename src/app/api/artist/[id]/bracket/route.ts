@@ -21,10 +21,10 @@ async function getSpotifyToken() {
 
 export async function GET(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const token = await getSpotifyToken();
-  const artistId = context.params.id;
+  const { id: artistId } = await context.params;
 
   // 1. Get all albums
   const albumsRes = await fetch(
@@ -32,10 +32,10 @@ export async function GET(
     { headers: { Authorization: `Bearer ${token}` } }
   );
   const albumsData = await albumsRes.json();
-  const albumIds = albumsData.items?.map((a: any) => a.id) || [];
+  const albumIds = albumsData.items?.map((a: { id: string }) => a.id) || [];
 
   // 2. Collect all track IDs (dedupe with a Set)
-  const trackSet = new Map<string, any>();
+  const trackSet = new Map<string, { id: string; name: string }>();
   for (const albumId of albumIds) {
     const tracksRes = await fetch(
       `https://api.spotify.com/v1/albums/${albumId}/tracks`,
@@ -44,7 +44,7 @@ export async function GET(
     const tracksData = await tracksRes.json();
 
     if (tracksData.items && Array.isArray(tracksData.items)) {
-      tracksData.items.forEach((t: any) => {
+      tracksData.items.forEach((t: { id: string; name: string }) => {
         if (!trackSet.has(t.id)) {
           trackSet.set(t.id, { id: t.id, name: t.name });
         }
@@ -61,7 +61,14 @@ export async function GET(
   }
 
   const trackChunks = chunkArray(trackIds, 50);
-  const tracks: any[] = [];
+  const tracks: Array<{
+    id: string;
+    name: string;
+    popularity: number;
+    albumArt?: string;
+    preview_url?: string;
+    spotifyUrl?: string;
+  }> = [];
   for (const chunk of trackChunks) {
     const idsParam = chunk.join(",");
     const tracksRes = await fetch(`https://api.spotify.com/v1/tracks?ids=${idsParam}`, {
@@ -70,21 +77,28 @@ export async function GET(
     const tracksData = await tracksRes.json();
 
     if (tracksData.tracks && Array.isArray(tracksData.tracks)) {
-      tracksData.tracks.forEach((t: any) => {
+      tracksData.tracks.forEach((t: {
+        id: string;
+        name: string;
+        popularity: number;
+        album: { images?: Array<{ url: string }> };
+        preview_url?: string;
+        external_urls?: { spotify?: string };
+      }) => {
         tracks.push({
           id: t.id,
           name: t.name,
           popularity: t.popularity,
-          albumArt: t.album.images?.[1]?.url || null,
-          preview_url: t.preview_url,
-          spotifyUrl: t.external_urls?.spotify || null,
+          albumArt: t.album.images?.[1]?.url || undefined,
+          preview_url: t.preview_url || undefined,
+          spotifyUrl: t.external_urls?.spotify || undefined,
         });
       });
     }
   }
 
   // 4. Deduplicate by track name (keep most popular version)
-  const uniqueTracksMap = new Map<string, any>();
+  const uniqueTracksMap = new Map<string, typeof tracks[0]>();
   tracks.forEach((track) => {
     const existing = uniqueTracksMap.get(track.name);
     if (!existing || track.popularity > existing.popularity) {

@@ -3,6 +3,8 @@ export interface Song {
     name: string;
     popularity: number;
     albumArt?: string;
+    preview_url?: string;
+    spotifyUrl?: string;
   }
   
   export interface Match {
