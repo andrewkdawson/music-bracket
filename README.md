@@ -6,13 +6,15 @@ An interactive web app that generates head-to-head tournament brackets from an a
 👉 [music-madness.vercel.app](https://music-madness.vercel.app)
 
 ## ✨ Features
-- 🔍 **Artist Search** – Enter any artist’s name to instantly pull their discography using the Spotify API
-- 🎶 **Automatic Song Import** – Fetches track titles and metadata directly from Spotify (no manual entry)
-- 🏆 **Bracket Generator** – Randomizes songs into a single-elimination tournament bracket
-- ✅ **Duplicate Handling** – Case-insensitive merging (e.g., “True Love” vs “TRUE LOVE” or "INDUSTRY BABY" vs "INDUSTRY BABY (feat. Jack Harlow)" count as the same song)
-- ⭐ **Song Popularity Ranking** – Automatically sorts songs by Spotify popularity score, so the biggest hits rise to the top
-- 🖥️ **Interactive UI** – Progress through rounds by selecting winners with a clean, responsive bracket interface
-- 📌 **Quality of Life Features** – Sticky headers, dynamic tab names, and auto-advancing when matchups are empty
+- 🔍 **Artist Search** – Enter any artist’s name to instantly pull their discography using the Spotify API  
+- 🎶 **Automatic Song Import** – Fetches track titles, album covers, and metadata directly from Spotify (no manual entry)  
+- 🏆 **Bracket Generator** – Randomizes songs into a single-elimination tournament bracket  
+- ✅ **Duplicate Handling** – Case-insensitive merging (e.g., “True Love” vs “TRUE LOVE” or "INDUSTRY BABY" vs "INDUSTRY BABY (feat. Jack Harlow)" count as the same song)  
+- ⭐ **Song Popularity Ranking** – Automatically sorts songs by Spotify popularity score, so the biggest hits rise to the top  
+- 🎧 **Spotify Previews** – Play previews of songs directly from Spotify before making your pick  
+- 💾 **Save & Share Brackets** – Export or share your finished bracket so friends can compare results  
+- 🖥️ **Interactive UI** – Progress through rounds by selecting winners with a clean, responsive bracket interface  
+- 📌 **Quality of Life Features** – Sticky headers, dynamic tab names, and auto-advancing when matchups are empty  
 
 ## 🛠️ Tech Stack
 - **Frontend:** React, Next.js, JavaScript (ES6+)
@@ -24,11 +26,6 @@ An interactive web app that generates head-to-head tournament brackets from an a
 ![Home Page](./assets/homepage.png)
 ![Sample Bracket](./assets/sample-bruno.png)
 ![Sample Win](./assets/sample-looh-win.png)
-
-## 🔮 Future Improvements
-- Add ability to restart without refreshing
-- Save/share completed brackets
-- Mobile-optimized bracket view
 
 ## 📦 Getting Started (For Developers)
 ```bash
