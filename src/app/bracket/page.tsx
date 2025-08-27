@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Song, Match, Round } from "@/lib/bracket";
 import confetti from "canvas-confetti";
+import Image from "next/image";
 
 export default function BracketPage() {
   const [bracket, setBracket] = useState<Round[]>([]);
@@ -12,7 +13,7 @@ export default function BracketPage() {
   const [artistName, setArtistName] = useState("Quinn XCII");
   const [artistId, setArtistId] = useState("3ApUX1o6oSz321MMECyIYd");
 
-  // ✅ Auto-advance only Round 1 byes
+  // ✅ Auto-advance Round 1 byes
   function autoAdvanceByes(bracket: Round[]): Round[] {
     const newBracket = JSON.parse(JSON.stringify(bracket)) as Round[];
     const round1 = newBracket.find((r) => r.roundNumber === 1);
@@ -22,9 +23,7 @@ export default function BracketPage() {
       if (match.song1 && !match.song2) {
         match.winner = match.song1;
         if (match.nextMatchId && match.slot) {
-          const nextMatch = newBracket
-            .flatMap((r) => r.matches)
-            .find((m) => m.id === match.nextMatchId);
+          const nextMatch = newBracket.flatMap((r) => r.matches).find((m) => m.id === match.nextMatchId);
           if (nextMatch) {
             if (match.slot === "song1") {
               nextMatch.song1 = match.song1;
@@ -38,9 +37,7 @@ export default function BracketPage() {
       } else if (!match.song1 && match.song2) {
         match.winner = match.song2;
         if (match.nextMatchId && match.slot) {
-          const nextMatch = newBracket
-            .flatMap((r) => r.matches)
-            .find((m) => m.id === match.nextMatchId);
+          const nextMatch = newBracket.flatMap((r) => r.matches).find((m) => m.id === match.nextMatchId);
           if (nextMatch) {
             if (match.slot === "song1") {
               nextMatch.song1 = match.song2;
@@ -57,7 +54,7 @@ export default function BracketPage() {
     return newBracket;
   }
 
-  // Fetch bracket for current artistId
+  // Fetch bracket
   useEffect(() => {
     const fetchBracket = async () => {
       try {
@@ -66,7 +63,6 @@ export default function BracketPage() {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         let data = await response.json();
 
-        // ✅ auto-advance Round 1 byes
         data = autoAdvanceByes(data);
 
         setBracket(data);
@@ -86,11 +82,7 @@ export default function BracketPage() {
       const finalMatch = finalRound.matches[0];
       if (finalMatch.winner && champion?.id !== finalMatch.winner.id) {
         setChampion(finalMatch.winner);
-        confetti({
-          particleCount: 200,
-          spread: 80,
-          origin: { y: 0.6 },
-        });
+        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
       }
     }
   }, [bracket]);
@@ -100,7 +92,7 @@ export default function BracketPage() {
 
   return (
     <div className="min-h-screen bg-[#191414] text-white p-6 overflow-x-auto">
-      {/* 🔍 Search Bar */}
+      {/* 🔍 Search */}
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -171,10 +163,24 @@ export default function BracketPage() {
                           {match.seed1}
                         </span>
                       )}
-                      <span>
-                        {match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}
-                      </span>
+                      <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
                     </button>
+                    {/* ▶ Only icon */}
+                    {match.song1?.preview_url ? (
+                      <audio controls className="h-8 w-8">
+                        <source src={match.song1.preview_url} type="audio/mpeg" />
+                      </audio>
+                    ) : match.song1?.spotifyUrl ? (
+                      <a
+                        href={match.song1.spotifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#1DB954] text-lg hover:scale-110 transition"
+                        title="Listen on Spotify"
+                      >
+                        ▶
+                      </a>
+                    ) : null}
                   </div>
 
                   <div className="text-center text-[#b3b3b3] text-sm font-semibold">vs</div>
@@ -197,10 +203,24 @@ export default function BracketPage() {
                           {match.seed2}
                         </span>
                       )}
-                      <span>
-                        {match.song2?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}
-                      </span>
+                      <span>{match.song2?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
                     </button>
+                    {/* ▶ Only icon */}
+                    {match.song2?.preview_url ? (
+                      <audio controls className="h-8 w-8">
+                        <source src={match.song2.preview_url} type="audio/mpeg" />
+                      </audio>
+                    ) : match.song2?.spotifyUrl ? (
+                      <a
+                        href={match.song2.spotifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#1DB954] text-lg hover:scale-110 transition"
+                        title="Listen on Spotify"
+                      >
+                        ▶
+                      </a>
+                    ) : null}
                   </div>
                 </div>
               ))}
@@ -214,6 +234,15 @@ export default function BracketPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-[#282828] rounded-xl shadow-2xl border border-[#1DB954] p-8 max-w-md text-center">
             <h2 className="text-3xl font-bold text-[#1DB954] mb-4">🏆 Champion 🏆</h2>
+            {champion.albumArt && (
+              <Image
+                src={champion.albumArt}
+                alt={champion.name}
+                width={192}
+                height={192}
+                className="mx-auto mb-4 rounded-lg shadow-lg object-cover"
+              />
+            )}
             <p className="text-xl font-semibold mb-4">{champion.name}</p>
             {champion.spotifyUrl && (
               <a
@@ -224,6 +253,11 @@ export default function BracketPage() {
               >
                 Listen on Spotify
               </a>
+            )}
+            {champion.preview_url && (
+              <audio controls autoPlay className="mt-4 w-full">
+                <source src={champion.preview_url} type="audio/mpeg" />
+              </audio>
             )}
             <button
               onClick={() => setChampion(null)}
@@ -237,7 +271,6 @@ export default function BracketPage() {
     </div>
   );
 
-  // Winner advancing logic
   function handlePickWinner(match: Match, song: Song, seed: number | null) {
     setBracket((prev) => {
       const newBracket = JSON.parse(JSON.stringify(prev)) as Round[];
@@ -246,10 +279,7 @@ export default function BracketPage() {
       m.winner = song;
 
       if (m.nextMatchId && m.slot) {
-        const nextMatch = newBracket
-          .flatMap((r) => r.matches)
-          .find((x) => x.id === m.nextMatchId)!;
-
+        const nextMatch = newBracket.flatMap((r) => r.matches).find((x) => x.id === m.nextMatchId)!;
         if (m.slot === "song1") {
           nextMatch.song1 = song;
           nextMatch.seed1 = seed;
@@ -258,7 +288,6 @@ export default function BracketPage() {
           nextMatch.seed2 = seed;
         }
       }
-
       return newBracket;
     });
   }

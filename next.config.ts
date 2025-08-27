@@ -5,11 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "i.scdn.co", // 🎨 album art images
+        hostname: "i.scdn.co", // 🎨 Spotify album images
       },
       {
         protocol: "https",
-        hostname: "p.scdn.co", // 🎶 preview mp3 files
+        hostname: "p.scdn.co", // 🎶 Spotify preview mp3s
       },
     ],
   },
