@@ -20,6 +20,7 @@ An interactive web app that generates head-to-head tournament brackets from an a
 - **Frontend:** React, Next.js, JavaScript (ES6+)
 - **Styling:** Tailwind CSS
 - **Deployment:** Vercel
+- **Music Data:** [Spotify Web API](https://developer.spotify.com/documentation/web-api/) 
 - **Version Control:** Git + GitHub
 
 ## 📸 Screenshots
