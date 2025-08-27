@@ -16,12 +16,10 @@ export default function BracketPage() {
 
   const bracketRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Update tab title dynamically
   useEffect(() => {
     document.title = artistId ? `${artistName} Madness` : "Music Madness";
   }, [artistId, artistName]);
 
-  // ✅ Auto-advance Round 1 byes
   function autoAdvanceByes(bracket: Round[]): Round[] {
     const newBracket = JSON.parse(JSON.stringify(bracket)) as Round[];
     const round1 = newBracket.find((r) => r.roundNumber === 1);
@@ -62,7 +60,6 @@ export default function BracketPage() {
     return newBracket;
   }
 
-  // Fetch bracket when artistId changes
   useEffect(() => {
     const fetchBracket = async () => {
       if (!artistId) return;
@@ -83,7 +80,6 @@ export default function BracketPage() {
     fetchBracket();
   }, [artistId]);
 
-  // Detect champion
   useEffect(() => {
     if (bracket.length > 0) {
       const finalRound = bracket[bracket.length - 1];
@@ -95,7 +91,6 @@ export default function BracketPage() {
     }
   }, [bracket]);
 
-  // ✅ Export bracket as PNG
   async function exportBracketAsImage() {
     if (!bracketRef.current) return;
 
@@ -126,7 +121,6 @@ export default function BracketPage() {
 
   return (
     <div className="min-h-screen bg-[#191414] text-white p-6 overflow-x-auto">
-      {/* Home page with search bar */}
       {!artistId && (
         <div className="max-w-xl mx-auto text-center mt-24">
           <h1 className="text-5xl font-extrabold mb-6 text-[#1DB954]">Music Madness 🎶</h1>
@@ -167,7 +161,6 @@ export default function BracketPage() {
         </div>
       )}
 
-      {/* Bracket page */}
       {artistId && !loading && !error && (
         <>
           <div className="fixed top-0 left-0 right-0 bg-[#191414] z-40 py-4">
@@ -213,32 +206,32 @@ export default function BracketPage() {
                         >
                           {/* Song 1 */}
                           <div className="flex items-center gap-2 mb-2">
-                          <button
-                            onClick={() =>
-                              match.song1 && handlePickWinner(match, match.song1, match.seed1)
-                            }
-                            disabled={!match.song1}
-                            className={`flex-1 text-left rounded px-2 py-2 ${
-                              match.song1 && match.winner?.id === match.song1?.id
-                                ? "bg-[#1DB954] text-black font-bold"
-                                : "hover:bg-[#1DB954]/20"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              {match.seed1 && (
-                                <span
-                                  className={`text-xs font-bold px-2 py-1 rounded ${
-                                    match.song1 && match.winner?.id === match.song1?.id
-                                    ? "bg-black/20 text-black"        // ✅ softer green background, white text
-                                    : "bg-[#1DB954]/20 text-[#1DB954]" // normal state                                    
-                                  }`}
-                                >
-                                  {match.seed1}
-                                </span>
-                              )}
-                              <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
-                            </div>
-                          </button>
+                            <button
+                              onClick={() =>
+                                match.song1 && handlePickWinner(match, match.song1, match.seed1)
+                              }
+                              disabled={!match.song1}
+                              className={`flex-1 text-left rounded px-2 py-2 ${
+                                match.song1 && match.winner?.id === match.song1?.id
+                                  ? "bg-[#1DB954] text-black font-bold"
+                                  : "hover:bg-[#1DB954]/20"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                {match.seed1 && (
+                                  <span
+                                    className={`text-xs font-bold px-2 py-1 rounded ${
+                                      match.song1 && match.winner?.id === match.song1?.id
+                                        ? "bg-[#15803d] text-white"
+                                        : "bg-[#1DB954]/20 text-[#1DB954]"
+                                    }`}
+                                  >
+                                    {match.seed1}
+                                  </span>
+                                )}
+                                <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                              </div>
+                            </button>
                           </div>
 
                           <div className="text-center text-[#b3b3b3] text-sm font-semibold">vs</div>
@@ -261,8 +254,8 @@ export default function BracketPage() {
                                   <span
                                     className={`text-xs font-bold px-2 py-1 rounded ${
                                       match.song2 && match.winner?.id === match.song2?.id
-                                      ? "bg-black/20 text-black"        // ✅ softer green background, white text
-                                      : "bg-[#1DB954]/20 text-[#1DB954]" // normal state                                      
+                                        ? "bg-[#15803d] text-white"
+                                        : "bg-[#1DB954]/20 text-[#1DB954]"
                                     }`}
                                   >
                                     {match.seed2}
@@ -283,7 +276,6 @@ export default function BracketPage() {
         </>
       )}
 
-      {/* Champion Modal */}
       {champion && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-[#282828] rounded-xl shadow-2xl border border-[#1DB954] p-8 max-w-md text-center">
