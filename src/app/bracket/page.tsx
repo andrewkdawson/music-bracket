@@ -140,90 +140,98 @@ export default function BracketPage() {
                 : `Round ${round.roundNumber}`}
             </h2>
             <div className="space-y-6">
-              {round.matches.map((match) => (
-                <div
-                  key={match.id}
-                  className="bg-[#282828] rounded-lg border border-[#1DB954]/40 shadow-lg p-4 hover:border-[#1DB954] transition"
-                >
-                  {/* Song 1 */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <button
-                      onClick={() =>
-                        match.song1 && handlePickWinner(match, match.song1, match.seed1)
-                      }
-                      disabled={!match.song1}
-                      className={`flex-1 flex items-center gap-2 text-left rounded px-2 py-2 ${
-                        match.song1 && match.winner?.id === match.song1?.id
-                          ? "bg-[#1DB954] text-black font-bold"
-                          : "hover:bg-[#1DB954]/20"
-                      }`}
-                    >
-                      {match.seed1 && (
-                        <span className="text-xs font-bold bg-[#1DB954]/20 text-[#1DB954] px-2 py-1 rounded">
-                          {match.seed1}
-                        </span>
-                      )}
-                      <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
-                    </button>
-                    {/* ▶ Only icon */}
-                    {match.song1?.preview_url ? (
-                      <audio controls className="h-8 w-8">
-                        <source src={match.song1.preview_url} type="audio/mpeg" />
-                      </audio>
-                    ) : match.song1?.spotifyUrl ? (
-                      <a
-                        href={match.song1.spotifyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#1DB954] text-lg hover:scale-110 transition"
-                        title="Listen on Spotify"
-                      >
-                        ▶
-                      </a>
-                    ) : null}
-                  </div>
+              {round.matches.map((match) => {
+                // 🚀 Skip Round 1 bye matches entirely
+                const isByeMatch =
+                  round.roundNumber === 1 &&
+                  ((match.song1 && !match.song2) || (!match.song1 && match.song2));
+                if (isByeMatch) return null;
 
-                  <div className="text-center text-[#b3b3b3] text-sm font-semibold">vs</div>
-
-                  {/* Song 2 */}
-                  <div className="flex items-center gap-2 mt-2">
-                    <button
-                      onClick={() =>
-                        match.song2 && handlePickWinner(match, match.song2, match.seed2)
-                      }
-                      disabled={!match.song2}
-                      className={`flex-1 flex items-center gap-2 text-left rounded px-2 py-2 ${
-                        match.song2 && match.winner?.id === match.song2?.id
-                          ? "bg-[#1DB954] text-black font-bold"
-                          : "hover:bg-[#1DB954]/20"
-                      }`}
-                    >
-                      {match.seed2 && (
-                        <span className="text-xs font-bold bg-[#1DB954]/20 text-[#1DB954] px-2 py-1 rounded">
-                          {match.seed2}
-                        </span>
-                      )}
-                      <span>{match.song2?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
-                    </button>
-                    {/* ▶ Only icon */}
-                    {match.song2?.preview_url ? (
-                      <audio controls className="h-8 w-8">
-                        <source src={match.song2.preview_url} type="audio/mpeg" />
-                      </audio>
-                    ) : match.song2?.spotifyUrl ? (
-                      <a
-                        href={match.song2.spotifyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#1DB954] text-lg hover:scale-110 transition"
-                        title="Listen on Spotify"
+                return (
+                  <div
+                    key={match.id}
+                    className="bg-[#282828] rounded-lg border border-[#1DB954]/40 shadow-lg p-4 hover:border-[#1DB954] transition"
+                  >
+                    {/* Song 1 */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <button
+                        onClick={() =>
+                          match.song1 && handlePickWinner(match, match.song1, match.seed1)
+                        }
+                        disabled={!match.song1}
+                        className={`flex-1 flex items-center gap-2 text-left rounded px-2 py-2 ${
+                          match.song1 && match.winner?.id === match.song1?.id
+                            ? "bg-[#1DB954] text-black font-bold"
+                            : "hover:bg-[#1DB954]/20"
+                        }`}
                       >
-                        ▶
-                      </a>
-                    ) : null}
+                        {match.seed1 && (
+                          <span className="text-xs font-bold bg-[#1DB954]/20 text-[#1DB954] px-2 py-1 rounded">
+                            {match.seed1}
+                          </span>
+                        )}
+                        <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                      </button>
+                      {/* ▶ Only icon */}
+                      {match.song1?.preview_url ? (
+                        <audio controls className="h-8 w-8">
+                          <source src={match.song1.preview_url} type="audio/mpeg" />
+                        </audio>
+                      ) : match.song1?.spotifyUrl ? (
+                        <a
+                          href={match.song1.spotifyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1DB954] text-lg hover:scale-110 transition"
+                          title="Listen on Spotify"
+                        >
+                          ▶
+                        </a>
+                      ) : null}
+                    </div>
+
+                    <div className="text-center text-[#b3b3b3] text-sm font-semibold">vs</div>
+
+                    {/* Song 2 */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        onClick={() =>
+                          match.song2 && handlePickWinner(match, match.song2, match.seed2)
+                        }
+                        disabled={!match.song2}
+                        className={`flex-1 flex items-center gap-2 text-left rounded px-2 py-2 ${
+                          match.song2 && match.winner?.id === match.song2?.id
+                            ? "bg-[#1DB954] text-black font-bold"
+                            : "hover:bg-[#1DB954]/20"
+                        }`}
+                      >
+                        {match.seed2 && (
+                          <span className="text-xs font-bold bg-[#1DB954]/20 text-[#1DB954] px-2 py-1 rounded">
+                            {match.seed2}
+                          </span>
+                        )}
+                        <span>{match.song2?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                      </button>
+                      {/* ▶ Only icon */}
+                      {match.song2?.preview_url ? (
+                        <audio controls className="h-8 w-8">
+                          <source src={match.song2.preview_url} type="audio/mpeg" />
+                        </audio>
+                      ) : match.song2?.spotifyUrl ? (
+                        <a
+                          href={match.song2.spotifyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1DB954] text-lg hover:scale-110 transition"
+                          title="Listen on Spotify"
+                        >
+                          ▶
+                        </a>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         ))}
