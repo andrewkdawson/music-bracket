@@ -217,19 +217,38 @@ export default function BracketPage() {
                                   : "hover:bg-[#1DB954]/20"
                               }`}
                             >
-                              <div className="flex items-center gap-2">
-                                {match.seed1 && (
-                                  <span
-                                    className={`text-xs font-bold px-2 py-1 rounded ${
-                                      match.song1 && match.winner?.id === match.song1?.id
-                                        ? "bg-[#15803d] text-white"
-                                        : "bg-[#1DB954]/20 text-[#1DB954]"
-                                    }`}
+                              <div className="flex items-center gap-2 justify-between">
+                                <div className="flex items-center gap-2">
+                                  {match.seed1 && (
+                                    <span
+                                      className={`text-xs font-bold px-2 py-1 rounded ${
+                                        match.song1 && match.winner?.id === match.song1?.id
+                                          ? "bg-black/20 text-black"
+                                          : "bg-[#1DB954]/20 text-[#1DB954]"
+                                      }`}
+                                    >
+                                      {match.seed1}
+                                    </span>
+                                  )}
+                                  <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                                </div>
+
+                                {/* ▶ Preview or Spotify link */}
+                                {match.song1?.preview_url ? (
+                                  <audio controls className="h-8 w-24">
+                                    <source src={match.song1.preview_url} type="audio/mpeg" />
+                                  </audio>
+                                ) : match.song1?.spotifyUrl ? (
+                                  <a
+                                    href={match.song1.spotifyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#1DB954] text-lg hover:scale-110 transition"
+                                    title="Listen on Spotify"
                                   >
-                                    {match.seed1}
-                                  </span>
-                                )}
-                                <span>{match.song1?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                                    ▶
+                                  </a>
+                                ) : null}
                               </div>
                             </button>
                           </div>
@@ -249,19 +268,38 @@ export default function BracketPage() {
                                   : "hover:bg-[#1DB954]/20"
                               }`}
                             >
-                              <div className="flex items-center gap-2">
-                                {match.seed2 && (
-                                  <span
-                                    className={`text-xs font-bold px-2 py-1 rounded ${
-                                      match.song2 && match.winner?.id === match.song2?.id
-                                        ? "bg-[#15803d] text-white"
-                                        : "bg-[#1DB954]/20 text-[#1DB954]"
-                                    }`}
+                              <div className="flex items-center gap-2 justify-between">
+                                <div className="flex items-center gap-2">
+                                  {match.seed2 && (
+                                    <span
+                                      className={`text-xs font-bold px-2 py-1 rounded ${
+                                        match.song2 && match.winner?.id === match.song2?.id
+                                          ? "bg-black/20 text-black"
+                                          : "bg-[#1DB954]/20 text-[#1DB954]"
+                                      }`}
+                                    >
+                                      {match.seed2}
+                                    </span>
+                                  )}
+                                  <span>{match.song2?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                                </div>
+
+                                {/* ▶ Preview or Spotify link */}
+                                {match.song2?.preview_url ? (
+                                  <audio controls className="h-8 w-24">
+                                    <source src={match.song2.preview_url} type="audio/mpeg" />
+                                  </audio>
+                                ) : match.song2?.spotifyUrl ? (
+                                  <a
+                                    href={match.song2.spotifyUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#1DB954] text-lg hover:scale-110 transition"
+                                    title="Listen on Spotify"
                                   >
-                                    {match.seed2}
-                                  </span>
-                                )}
-                                <span>{match.song2?.name || (round.roundNumber === 1 ? "BYE" : "TBD")}</span>
+                                    ▶
+                                  </a>
+                                ) : null}
                               </div>
                             </button>
                           </div>
