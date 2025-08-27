@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Music Bracket Challenge",
+  title: "Music Madness",
   description: "Vote through songs until you crown a champion",
 };
 
