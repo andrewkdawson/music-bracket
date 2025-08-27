@@ -97,12 +97,13 @@ export async function GET(
     }
   }
 
-  // 4. Deduplicate by track name (keep most popular version)
-  const uniqueTracksMap = new Map<string, typeof tracks[0]>();
+  // 4. Deduplicate by name (case-insensitive) → keep most popular version
+  const uniqueTracksMap = new Map<string, any>();
   tracks.forEach((track) => {
-    const existing = uniqueTracksMap.get(track.name);
+    const key = track.name.toLowerCase().trim();
+    const existing = uniqueTracksMap.get(key);
     if (!existing || track.popularity > existing.popularity) {
-      uniqueTracksMap.set(track.name, track);
+      uniqueTracksMap.set(key, track);
     }
   });
 
